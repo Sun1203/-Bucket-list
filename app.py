@@ -8,6 +8,7 @@ db = client.dbsparta
 
 app = Flask(__name__)
 
+print(hello)
 
 @app.route('/')
 def home():
