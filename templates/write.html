@@ -84,7 +84,7 @@
     </style>
     <script>
         $(document).ready(function () {
-            listing();
+            {#listing();#}
         });
 
 
@@ -92,7 +92,8 @@
         function posting() {
             let name = $('#name').val()
             let url = $('#url').val()
-            let category = $('#category').val()
+            let cate = document.getElementById('category')
+            let category = cate.options[cate.selectedIndex].text
             let comment = $('#comment').val()
 
             $.ajax({
@@ -130,7 +131,6 @@
     <div class="input-group mb-3">
         <label class="input-group-text" for="inputGroupSelect01">카테고리</label>
         <select class="form-select" id="category">
-            <option selected>-- 선택하기 --</option>
             <option value="1">갖고싶은것</option>
             <option value="2">먹고싶은것</option>
         </select>

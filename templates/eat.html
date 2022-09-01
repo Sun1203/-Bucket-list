@@ -93,6 +93,72 @@
             listing();
         });
 
+        function posting(num){
+            open_box()
+            console.log(num)
+            let name = document.getElementById('name2')
+            let url = document.getElementById('url2')
+            let cate = document.getElementById('category2')
+            let category = cate.options[cate.selectedIndex].text
+            let comment = document.getElementById('comment2')
+
+            $.ajax({
+                type: 'POST',
+                url: '/edit_show',
+                data: {num_give:num,},
+                success: function (response) {
+                    let rows = response['edit_list']
+                    console.log(rows[0]['name'])
+                    for (let i=0;i<rows.length;i++){
+                        if (rows[i]['num'] == num){
+                            name.value = rows[i]['name']
+                            comment.value = rows[i]['comment']
+                            url.value = rows[i]['url']
+                            category.text = rows[i]['category']
+                        }
+                    }
+                }
+            });
+        }
+
+        function edit() {
+
+            let name = $('#name2').val()
+            let url = $('#url2').val()
+            let cate  = document.getElementById('category2')
+            let category = cate.options[cate.selectedIndex].text
+            let comment = $('#comment2').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/update',
+                data: {url_give:url, name_give:name, comment_give:comment, category_give:category},
+                success: function (response) {
+                    alert(response['update'])
+                    window.location.reload()
+                    window.location.href=('/')
+                }
+            });
+        }
+
+
+        function delete_one() {
+            let name = document.getElementById('name').innerText
+
+            $.ajax({
+                type: 'POST',
+                url: '/delete',
+                data: {name_give:name,},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+
+                }
+            });
+        }
+
+
+
         function listing() {
             $.ajax({
                 type: 'GET',
@@ -101,21 +167,25 @@
                 success: function (response) {
 
                     let rows = response['write']
-                    console.log(rows)
                     for (let i=0;i<rows.length;i++){
                         let name = rows[i]['name']
                         let comment = rows[i]['comment']
                         let url = rows[i]['url']
                         let category = rows[i]['category']
+                        let num = rows[i]['num']
 
-                        if (category == 2) {
+                        if (category === "먹고싶은것") {
                             let temp_html = `        <div class="col">
                                                         <div class="card h-100">
-                                                            <img src="${url}"
+                                                            <img id='url' src="${url}"
                                                                  class="card-img-top">
                                                             <div class="card-body">
-                                                                <h5 class="card-title">${name}</h5>
-                                                                <p class="mycomment">${comment}</p>
+
+                                                                <h5 id="category" class="card-title">${category}</h5>
+                                                                <h5 id="name" class="card-title">${name}</h5>
+                                                                <p id="comment" class="mycomment">${comment}</p>
+                                                                <button onclick="posting(${num})" type="button" class="btn btn-dark">수정</button>
+                                                                <button onclick="delete_one()" type="button" class="btn btn-dark">삭제</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -126,6 +196,15 @@
                     }
                 }
             })
+        }
+
+
+        function open_box() {
+            $('#post-box').show()
+        }
+
+        function close_box() {
+            $('#post-box').hide()
         }
 
 
@@ -140,6 +219,31 @@
     <button onclick="window.location.href='/write'">기록하기</button>
     <button onclick="window.location.href=('/')">메인페이지</button>
     <button onclick="window.location.href='/want'">갖고싶은것</button>
+</div>
+<div class="mypost" id="post-box">
+    <div class="form-floating mb-3">
+        <input  value="" id="name2" type="email" class="form-control" placeholder="name@example.com">
+        <label>닉네임</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input  value="" id="url2" type="email" class="form-control" placeholder="name@example.com">
+        <label>이미지URL</label>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">카테고리</label>
+        <select class="form-select" id="category2">
+            <option value="1">갖고싶은것</option>
+            <option value="2">먹고싶은것</option>
+        </select>
+    </div>
+    <div class="form-floating">
+        <textarea  id="comment2" class="form-control" placeholder="Leave a comment here"></textarea>
+        <label for="floatingTextarea2">코멘트</label>
+    </div>
+    <div class="mybtns">
+        <button onclick="edit()" type="button" class="btn btn-dark">수정하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
 </div>
 
 <div class="mycards">
