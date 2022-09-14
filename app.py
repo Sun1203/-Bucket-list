@@ -14,6 +14,35 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
+@app.route('/signin')
+def signin():
+    return render_template('signin.html')
+
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+
+@app.route('/bucket')
+def bucket():
+    return render_template('bucket.html')
+
+
 @app.route('/edit', methods=["GET"])
 def edit():
     return render_template('edit.html')
